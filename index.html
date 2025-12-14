@@ -5,52 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkillSwap | Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, .brand-font { font-family: 'Space Grotesk', sans-serif; }
-        .gradient-text { background: linear-gradient(to right, #4ade80, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .hero-pattern { background-image: radial-gradient(#3b82f6 1px, transparent 1px); background-size: 40px 40px; mask-image: linear-gradient(to bottom, black 40%, transparent 100%); }
+        .brand-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Background Pattern & Gradients */
+        .hero-pattern { 
+            background-image: radial-gradient(#3b82f6 1px, transparent 1px); 
+            background-size: 40px 40px; 
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%); 
+        }
+        .gradient-text { 
+            background: linear-gradient(to right, #4ade80, #3b82f6); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+
+        /* Hover Animation for Cards */
+        .hover-card { transition: all 0.3s ease; }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(74, 222, 128, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-white antialiased">
+<body class="bg-slate-950 text-white overflow-x-hidden selection:bg-green-500 selection:text-black">
 
-    <nav class="fixed w-full z-50 glass-card border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-bolt text-green-400 text-2xl"></i>
-                    <span class="text-2xl font-bold brand-font tracking-tighter">SkillSwap</span>
-                </div>
-                <div class="hidden md:block">
-                    <a href="login.html" class="bg-green-500 hover:bg-green-400 text-black px-5 py-2 rounded-full font-bold transition-transform hover:scale-105">Login / Sign Up</a>
-                </div>
-            </div>
+    <!-- Navigation -->
+    <nav class="absolute w-full z-50 p-6 flex justify-between items-center max-w-7xl mx-auto left-0 right-0">
+        <div class="flex items-center gap-2 text-2xl font-bold brand-font cursor-pointer">
+            <i class="fa-solid fa-bolt text-green-500"></i> SkillSwap
         </div>
+        <a href="auth.html" class="text-sm font-bold text-white hover:text-green-400 transition-colors px-4 py-2 rounded-lg hover:bg-white/5">
+            Login
+        </a>
     </nav>
 
-    <div class="relative pt-32 pb-20 sm:pt-40 sm:pb-24 overflow-hidden h-screen flex flex-col justify-center">
-        <div class="absolute inset-0 hero-pattern opacity-20"></div>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-900/30 border border-blue-500/30 text-blue-300 mb-8 animate-bounce">
+    <!-- Hero Section -->
+    <div class="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-4">
+        
+        <!-- Background Graphics -->
+        <div class="absolute inset-0 hero-pattern opacity-20 pointer-events-none"></div>
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-green-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto text-center">
+            
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-900/30 border border-blue-500/30 text-blue-300 mb-8 animate-bounce">
                 <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                <span class="text-sm font-semibold">Pilot Launching at IIM Shillong</span>
+                <span class="text-xs font-bold uppercase tracking-wider">IIM Shillong Pilot Live</span>
             </div>
-            <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight mb-8">
+            
+            <!-- Main Headline -->
+            <h1 class="text-6xl md:text-8xl font-extrabold tracking-tight mb-6 leading-tight brand-font">
                 Swap Skills. <br />
                 <span class="gradient-text">Score Success.</span>
             </h1>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-400">
-                The first structured peer-learning marketplace. Stop "just asking around." Start trading your expertise for the help you actually need.
+            
+            <!-- Subtitle -->
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-400 leading-relaxed mb-10">
+                The exclusive peer-learning marketplace for IIM Shillong. 
+                Exchange your expertise for the help you need, without spending a rupee.
             </p>
-            <div class="mt-10 flex justify-center gap-4">
-                <a href="login.html" class="px-8 py-4 bg-green-500 text-slate-900 font-bold rounded-xl hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(74,222,128,0.3)]">
-                    Start Swapping Skills
-                </a>
+
+            <!-- CTA Button -->
+            <a href="auth.html" class="inline-block px-10 py-5 bg-green-500 text-slate-900 font-bold rounded-xl text-lg hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(74,222,128,0.3)] hover:scale-105">
+                Get Started
+            </a>
+
+            <!-- Bottom Feature Graphics -->
+            <div class="mt-24 grid md:grid-cols-3 gap-6 text-left">
+                
+                <!-- Card 1 -->
+                <div class="glass-panel p-8 rounded-2xl border-t-4 border-green-500 hover-card">
+                    <div class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center text-green-400 mb-4">
+                        <i class="fa-solid fa-coins text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 brand-font">Earn SkillCoins</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Teach a junior, review a resume, or host a mock interview to earn currency for your own needs.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-panel p-8 rounded-2xl border-t-4 border-blue-500 hover-card">
+                    <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 mb-4">
+                        <i class="fa-solid fa-users-viewfinder text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 brand-font">Verified Network</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">No randoms. Only verified IIM Shillong students can join the platform via institute email.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-panel p-8 rounded-2xl border-t-4 border-purple-500 hover-card">
+                    <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-400 mb-4">
+                        <i class="fa-solid fa-trophy text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 brand-font">Leaderboard</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Compete for the top spot. Top helpers get exclusive campus perks and recognition.</p>
+                </div>
+
             </div>
         </div>
     </div>
+
 </body>
 </html>
