@@ -48,7 +48,7 @@
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Wallet Card (Now Full Width) -->
+            <!-- Wallet Card -->
             <div class="lg:col-span-3 relative overflow-hidden rounded-2xl p-8 border border-green-500/30 bg-gradient-to-br from-slate-900 to-slate-800">
                 <div class="absolute right-0 top-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                 <div class="relative z-10">
@@ -98,15 +98,14 @@
 
         // ============================================================
         // PASTE YOUR FIREBASE CONFIG HERE
-        // (Go to Firebase Console > Project Settings > General > Your Apps)
         // ============================================================
         const firebaseConfig = {
-          apiKey: "PASTE_YOUR_API_KEY_HERE",
-          authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
-          projectId: "PASTE_YOUR_PROJECT_ID",
-          storageBucket: "PASTE_YOUR_PROJECT_ID.appspot.com",
-          messagingSenderId: "PASTE_YOUR_SENDER_ID",
-          appId: "PASTE_YOUR_APP_ID"
+  apiKey: "AIzaSyA9Jk0jXfYc5ac61tPAqAEiT3uOscmC52s",
+  authDomain: "skillswap-b23e4.firebaseapp.com",
+  projectId: "skillswap-b23e4",
+  storageBucket: "skillswap-b23e4.firebasestorage.app",
+  messagingSenderId: "470726238704",
+  appId: "1:470726238704:web:53608bc2e3d1c7fe793d35",
         };
 
         // Initialize Firebase
@@ -126,14 +125,21 @@
         });
 
         async function loadUserData(uid) {
-            const docRef = doc(db, "users", uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                document.getElementById('user-name').innerText = data.name;
-                document.getElementById('coin-header').innerText = data.coins;
-                document.getElementById('coin-main').innerText = data.coins;
-                renderSkills(data.skills || []);
+            try {
+                const docRef = doc(db, "users", uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('user-name').innerText = data.name || "Student";
+                    document.getElementById('coin-header').innerText = data.coins || 0;
+                    document.getElementById('coin-main').innerText = data.coins || 0;
+                    renderSkills(data.skills || []);
+                } else {
+                    console.error("No user document found!");
+                }
+            } catch(e) {
+                console.error("Error loading user data:", e);
             }
         }
 
@@ -152,6 +158,7 @@
         }
 
         async function removeSkill(skill) {
+            if (!currentUserUid) return;
             await updateDoc(doc(db, "users", currentUserUid), { skills: arrayRemove(skill) });
             loadUserData(currentUserUid);
         }
@@ -159,7 +166,7 @@
         document.getElementById('add-skill-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const input = document.getElementById('skill-input');
-            if(input.value.trim()) {
+            if(input.value.trim() && currentUserUid) {
                 await updateDoc(doc(db, "users", currentUserUid), { skills: arrayUnion(input.value.trim()) });
                 input.value = '';
                 loadUserData(currentUserUid);
