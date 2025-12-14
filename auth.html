@@ -1,401 +1,241 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>SkillSwap | Access</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-            rel="stylesheet"
-        />
-        <style>
-            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-            body {
-                font-family: "Inter", sans-serif;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap | Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-            /* Smooth fade for tab switching */
-            .fade-in {
-                animation: fadeIn 0.3s ease-in-out;
-            }
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(5px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
+        .loader {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #22c55e;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-950 text-white h-screen flex items-center justify-center relative overflow-hidden">
+    
+    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-green-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-            /* Loader */
-            .loader {
-                border: 2px solid #f3f3f3;
-                border-top: 2px solid #22c55e;
-                border-radius: 50%;
-                width: 20px;
-                height: 20px;
-                animation: spin 1s linear infinite;
-                display: inline-block;
-            }
-            @keyframes spin {
-                0% {
-                    transform: rotate(0deg);
-                }
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
-        </style>
-    </head>
-    <body
-        class="bg-slate-950 text-white h-screen flex items-center justify-center relative overflow-hidden"
-    >
-        <!-- Background Elements -->
-        <div
-            class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-green-500/10 rounded-full blur-[120px] pointer-events-none"
-        ></div>
-        <div
-            class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"
-        ></div>
-
-        <div
-            class="w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative z-10 mx-4 overflow-hidden"
-        >
-            <!-- Header / Logo -->
-            <div class="pt-8 pb-6 text-center">
-                <div
-                    class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-green-500/20 text-green-400 mb-4"
-                >
-                    <i class="fa-solid fa-bolt text-2xl"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-white">SkillSwap</h2>
+    <div class="w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative z-10 mx-4 overflow-hidden">
+        
+        <div class="pt-8 pb-6 text-center">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-green-500/20 text-green-400 mb-4">
+                <i class="fa-solid fa-bolt text-2xl"></i>
             </div>
-
-            <!-- Tabs -->
-            <div class="flex border-b border-white/5 px-8">
-                <button
-                    type="button"
-                    id="tab-login"
-                    class="flex-1 pb-4 text-sm font-semibold text-green-400 border-b-2 border-green-500 transition-all hover:text-green-300"
-                >
-                    Login
-                </button>
-                <button
-                    type="button"
-                    id="tab-signup"
-                    class="flex-1 pb-4 text-sm font-semibold text-slate-500 border-b-2 border-transparent transition-all hover:text-slate-300"
-                >
-                    Sign Up
-                </button>
-            </div>
-
-            <div class="p-8">
-                <!-- Main Form -->
-                <form id="auth-form" class="space-y-5 fade-in">
-                    <!-- Name Field (Hidden by default) -->
-                    <div id="field-name" class="hidden space-y-1">
-                        <label
-                            class="block text-xs font-medium text-slate-400 uppercase tracking-wider ml-1"
-                            >Full Name</label
-                        >
-                        <div class="relative group">
-                            <i
-                                class="fa-solid fa-user absolute left-4 top-3.5 text-slate-500 group-focus-within:text-green-500 transition-colors"
-                            ></i>
-                            <input
-                                type="text"
-                                id="name"
-                                class="w-full bg-slate-950/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all"
-                                placeholder="Arjun Singh"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="space-y-1">
-                        <label
-                            class="block text-xs font-medium text-slate-400 uppercase tracking-wider ml-1"
-                            >Institute Email</label
-                        >
-                        <div class="relative group">
-                            <i
-                                class="fa-solid fa-envelope absolute left-4 top-3.5 text-slate-500 group-focus-within:text-green-500 transition-colors"
-                            ></i>
-                            <input
-                                type="email"
-                                id="email"
-                                required
-                                class="w-full bg-slate-950/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all"
-                                placeholder="student@iimshillong.ac.in"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between items-center">
-                            <label
-                                class="block text-xs font-medium text-slate-400 uppercase tracking-wider ml-1"
-                                >Password</label
-                            >
-                            <button
-                                type="button"
-                                id="forgot-btn"
-                                class="text-xs text-green-500 hover:text-green-400 hover:underline"
-                            >
-                                Forgot?
-                            </button>
-                        </div>
-                        <div class="relative group">
-                            <i
-                                class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-500 group-focus-within:text-green-500 transition-colors"
-                            ></i>
-                            <input
-                                type="password"
-                                id="password"
-                                required
-                                class="w-full bg-slate-950/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all"
-                                placeholder="••••••••"
-                            />
-                        </div>
-                    </div>
-
-                    <button
-                        type="submit"
-                        id="submit-btn"
-                        class="w-full bg-green-500 hover:bg-green-400 text-slate-950 font-bold py-3.5 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
-                    >
-                        <span>Enter Campus Hub</span>
-                    </button>
-                </form>
-
-                <!-- Error Message -->
-                <div
-                    id="error-msg"
-                    class="text-red-400 text-center text-sm mt-4 hidden bg-red-500/10 p-3 rounded-lg border border-red-500/20 flex items-center justify-center gap-2"
-                >
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <span id="error-text">Error goes here</span>
-                </div>
-
-                <!-- Success Message (for password reset) -->
-                <div
-                    id="success-msg"
-                    class="text-green-400 text-center text-sm mt-4 hidden bg-green-500/10 p-3 rounded-lg border border-green-500/20 flex items-center justify-center gap-2"
-                >
-                    <i class="fa-solid fa-check-circle"></i>
-                    <span id="success-text">Success goes here</span>
-                </div>
-
-                <p class="text-center text-xs text-slate-500 mt-6">
-                    By continuing, you agree to the
-                    <a href="#" class="underline hover:text-slate-400"
-                        >Honor Code</a
-                    >.
-                </p>
-            </div>
+            <h2 class="text-2xl font-bold text-white">SkillSwap</h2>
         </div>
 
-        <script type="module">
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-            import {
-                getAuth,
-                createUserWithEmailAndPassword,
-                signInWithEmailAndPassword,
-                sendPasswordResetEmail,
-            } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-            import {
-                getFirestore,
-                doc,
-                setDoc,
-            } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        <div class="flex border-b border-white/5 px-8">
+            <button type="button" id="tab-login" class="flex-1 pb-4 text-sm font-semibold text-green-400 border-b-2 border-green-500 transition-all hover:text-green-300">
+                Login
+            </button>
+            <button type="button" id="tab-signup" class="flex-1 pb-4 text-sm font-semibold text-slate-500 border-b-2 border-transparent transition-all hover:text-slate-300">
+                Sign Up
+            </button>
+        </div>
 
-            // ============================================================
-            // PASTE YOUR FIREBASE CONFIG HERE
-            // (Go to Firebase Console > Project Settings > General > Your Apps)
-            // ============================================================
-            const firebaseConfig = {
-                apiKey: "PASTE_YOUR_API_KEY_HERE",
-                authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
-                projectId: "PASTE_YOUR_PROJECT_ID",
-                storageBucket: "PASTE_YOUR_PROJECT_ID.appspot.com",
-                messagingSenderId: "PASTE_YOUR_SENDER_ID",
-                appId: "PASTE_YOUR_APP_ID",
-            };
+        <div class="p-8">
+            <form id="auth-form" class="space-y-5 fade-in">
+                
+                <div id="field-name" class="hidden space-y-1">
+                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider ml-1">Full Name</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-user absolute left-4 top-3.5 text-slate-500 group-focus-within:text-green-500 transition-colors"></i>
+                        <input type="text" id="name" class="w-full bg-slate-950/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all" placeholder="Arjun Singh">
+                    </div>
+                </div>
 
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const db = getFirestore(app);
+                <div class="space-y-1">
+                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider ml-1">Institute Email</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-envelope absolute left-4 top-3.5 text-slate-500 group-focus-within:text-green-500 transition-colors"></i>
+                        <input type="email" id="email" required class="w-full bg-slate-950/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all" placeholder="student@iimshillong.ac.in">
+                    </div>
+                </div>
+                
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider ml-1">Password</label>
+                        <button type="button" id="forgot-btn" class="text-xs text-green-500 hover:text-green-400 hover:underline">Forgot?</button>
+                    </div>
+                    <div class="relative group">
+                        <i class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-500 group-focus-within:text-green-500 transition-colors"></i>
+                        <input type="password" id="password" required class="w-full bg-slate-950/50 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 outline-none transition-all" placeholder="••••••••">
+                    </div>
+                </div>
 
-            let isSignUp = false; // Default is Login
+                <button type="submit" id="submit-btn" class="w-full bg-green-500 hover:bg-green-400 text-slate-950 font-bold py-3.5 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-green-500/20 flex items-center justify-center gap-2">
+                    <span>Enter Campus Hub</span>
+                </button>
+            </form>
+            
+            <div id="error-msg" class="text-red-400 text-center text-sm mt-4 hidden bg-red-500/10 p-3 rounded-lg border border-red-500/20 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-exclamation"></i> <span id="error-text">Error goes here</span>
+            </div>
 
-            // DOM Elements
-            const form = document.getElementById("auth-form");
-            const tabLogin = document.getElementById("tab-login");
-            const tabSignup = document.getElementById("tab-signup");
-            const fieldName = document.getElementById("field-name");
-            const submitBtn = document.getElementById("submit-btn");
-            const forgotBtn = document.getElementById("forgot-btn");
-            const errorMsg = document.getElementById("error-msg");
-            const errorText = document.getElementById("error-text");
-            const successMsg = document.getElementById("success-msg");
-            const successText = document.getElementById("success-text");
+            <div id="success-msg" class="text-green-400 text-center text-sm mt-4 hidden bg-green-500/10 p-3 rounded-lg border border-green-500/20 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-check-circle"></i> <span id="success-text">Success goes here</span>
+            </div>
 
-            // Styles for Active/Inactive Tabs
-            const activeClass = ["text-green-400", "border-green-500"];
-            const inactiveClass = ["text-slate-500", "border-transparent"];
+            <p class="text-center text-xs text-slate-500 mt-6">
+                By continuing, you agree to the <a href="#" class="underline hover:text-slate-400">Honor Code</a>.
+            </p>
+        </div>
+    </div>
 
-            // Functions
-            function switchTab(mode) {
-                isSignUp = mode === "signup";
+    <script type="module">
+        // Import general Auth/DB from config
+        import { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, setDoc, doc } from './config.js';
+        
+        // Import this specific function directly from CDN because it might be missing in config.js exports
+        import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-                // Reset Messages
-                errorMsg.classList.add("hidden");
-                successMsg.classList.add("hidden");
+        let isSignUp = false;
+        
+        // DOM Elements
+        const form = document.getElementById('auth-form');
+        const tabLogin = document.getElementById('tab-login');
+        const tabSignup = document.getElementById('tab-signup');
+        const fieldName = document.getElementById('field-name');
+        const submitBtn = document.getElementById('submit-btn');
+        const forgotBtn = document.getElementById('forgot-btn');
+        const errorMsg = document.getElementById('error-msg');
+        const errorText = document.getElementById('error-text');
+        const successMsg = document.getElementById('success-msg');
+        const successText = document.getElementById('success-text');
 
-                // Animation Reset
-                form.classList.remove("fade-in");
-                void form.offsetWidth; // trigger reflow
-                form.classList.add("fade-in");
+        // Styles
+        const activeClass = ['text-green-400', 'border-green-500'];
+        const inactiveClass = ['text-slate-500', 'border-transparent'];
 
+        // Functions
+        function switchTab(mode) {
+            isSignUp = (mode === 'signup');
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+            
+            // Animation reset
+            form.classList.remove('fade-in');
+            void form.offsetWidth; 
+            form.classList.add('fade-in');
+
+            if (isSignUp) {
+                tabSignup.classList.remove(...inactiveClass);
+                tabSignup.classList.add(...activeClass);
+                tabLogin.classList.remove(...activeClass);
+                tabLogin.classList.add(...inactiveClass);
+                
+                fieldName.classList.remove('hidden');
+                submitBtn.innerHTML = `<span>Create & Get 100 Coins</span>`;
+                forgotBtn.classList.add('invisible'); 
+            } else {
+                tabLogin.classList.remove(...inactiveClass);
+                tabLogin.classList.add(...activeClass);
+                tabSignup.classList.remove(...activeClass);
+                tabSignup.classList.add(...inactiveClass);
+
+                fieldName.classList.add('hidden');
+                submitBtn.innerHTML = `<span>Enter Campus Hub</span>`;
+                forgotBtn.classList.remove('invisible');
+            }
+        }
+
+        tabLogin.addEventListener('click', () => switchTab('login'));
+        tabSignup.addEventListener('click', () => switchTab('signup'));
+
+        forgotBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                showError("Please enter your email address first.");
+                return;
+            }
+            try {
+                forgotBtn.innerText = "Sending...";
+                await sendPasswordResetEmail(auth, email);
+                showSuccess("Reset link sent! Check your email.");
+                forgotBtn.innerText = "Forgot?";
+            } catch (error) {
+                showError(error.message.replace('Firebase: ', ''));
+                forgotBtn.innerText = "Forgot?";
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const name = document.getElementById('name').value;
+            
+            setLoading(true);
+            hideMessages();
+
+            try {
                 if (isSignUp) {
-                    // Set Signup Active
-                    tabSignup.classList.remove(...inactiveClass);
-                    tabSignup.classList.add(...activeClass);
-
-                    tabLogin.classList.remove(...activeClass);
-                    tabLogin.classList.add(...inactiveClass);
-
-                    // Show Name Field & Change Button Text
-                    fieldName.classList.remove("hidden");
-                    submitBtn.innerHTML = `<span>Create & Get 100 Coins</span>`;
-                    forgotBtn.classList.add("invisible");
+                    if(!name) throw new Error("Full Name is required.");
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    
+                    await setDoc(doc(db, "users", userCredential.user.uid), {
+                        name: name,
+                        email: email,
+                        coins: 100,
+                        skills: [],
+                        program: "Student"
+                    });
                 } else {
-                    // Set Login Active
-                    tabLogin.classList.remove(...inactiveClass);
-                    tabLogin.classList.add(...activeClass);
-
-                    tabSignup.classList.remove(...activeClass);
-                    tabSignup.classList.add(...inactiveClass);
-
-                    // Hide Name Field & Change Button Text
-                    fieldName.classList.add("hidden");
-                    submitBtn.innerHTML = `<span>Enter Campus Hub</span>`;
-                    forgotBtn.classList.remove("invisible");
+                    await signInWithEmailAndPassword(auth, email, password);
                 }
+                window.location.href = "dashboard.html";
+            } catch (error) {
+                let msg = error.message.replace('Firebase: ', '');
+                if(msg.includes('auth/invalid-email')) msg = "Please enter a valid email address.";
+                if(msg.includes('auth/weak-password')) msg = "Password should be at least 6 characters.";
+                if(msg.includes('auth/email-already-in-use')) msg = "This email is already registered.";
+                if(msg.includes('auth/invalid-credential')) msg = "Invalid email or password.";
+                
+                showError(msg);
+                setLoading(false);
             }
+        });
 
-            // Event Listeners
-            tabLogin.addEventListener("click", () => switchTab("login"));
-            tabSignup.addEventListener("click", () => switchTab("signup"));
-
-            // Forgot Password Logic
-            forgotBtn.addEventListener("click", async () => {
-                const email = document.getElementById("email").value;
-                if (!email) {
-                    showError("Please enter your email address first.");
-                    return;
-                }
-                try {
-                    forgotBtn.innerText = "Sending...";
-                    await sendPasswordResetEmail(auth, email);
-                    showSuccess("Reset link sent! Check your email.");
-                    forgotBtn.innerText = "Forgot?";
-                } catch (error) {
-                    showError(error.message.replace("Firebase: ", ""));
-                    forgotBtn.innerText = "Forgot?";
-                }
-            });
-
-            // Form Submission
-            form.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const email = document.getElementById("email").value;
-                const password = document.getElementById("password").value;
-                const name = document.getElementById("name").value;
-
-                setLoading(true);
-                hideMessages();
-
-                try {
-                    if (isSignUp) {
-                        // Sign Up Logic
-                        if (!name) throw new Error("Full Name is required.");
-
-                        const userCredential =
-                            await createUserWithEmailAndPassword(
-                                auth,
-                                email,
-                                password,
-                            );
-
-                        // Database Entry
-                        await setDoc(
-                            doc(db, "users", userCredential.user.uid),
-                            {
-                                name: name,
-                                email: email,
-                                coins: 100,
-                                skills: [],
-                                program: "Student",
-                            },
-                        );
-                    } else {
-                        // Login Logic
-                        await signInWithEmailAndPassword(auth, email, password);
-                    }
-
-                    // Redirect on success
-                    window.location.href = "dashboard.html";
-                } catch (error) {
-                    let msg = error.message.replace("Firebase: ", "");
-                    if (msg.includes("auth/invalid-email"))
-                        msg = "Please enter a valid email address.";
-                    if (msg.includes("auth/weak-password"))
-                        msg = "Password should be at least 6 characters.";
-                    if (msg.includes("auth/email-already-in-use"))
-                        msg = "This email is already registered.";
-                    if (msg.includes("auth/invalid-credential"))
-                        msg = "Invalid email or password.";
-
-                    showError(msg);
-                    setLoading(false);
-                }
-            });
-
-            // Helper Functions
-            function setLoading(isLoading) {
-                submitBtn.disabled = isLoading;
-                if (isLoading) {
-                    submitBtn.innerHTML = `<div class="loader"></div> <span>Processing...</span>`;
-                    submitBtn.classList.add("opacity-75", "cursor-not-allowed");
-                } else {
-                    submitBtn.innerHTML = isSignUp
-                        ? `<span>Create & Get 100 Coins</span>`
-                        : `<span>Enter Campus Hub</span>`;
-                    submitBtn.classList.remove(
-                        "opacity-75",
-                        "cursor-not-allowed",
-                    );
-                }
+        function setLoading(isLoading) {
+            submitBtn.disabled = isLoading;
+            if (isLoading) {
+                submitBtn.innerHTML = `<div class="loader"></div> <span>Processing...</span>`;
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+            } else {
+                submitBtn.innerHTML = isSignUp ? `<span>Create & Get 100 Coins</span>` : `<span>Enter Campus Hub</span>`;
+                submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
             }
+        }
 
-            function showError(msg) {
-                errorText.innerText = msg;
-                errorMsg.classList.remove("hidden");
-            }
+        function showError(msg) {
+            errorText.innerText = msg;
+            errorMsg.classList.remove('hidden');
+        }
 
-            function showSuccess(msg) {
-                successText.innerText = msg;
-                successMsg.classList.remove("hidden");
-            }
+        function showSuccess(msg) {
+            successText.innerText = msg;
+            successMsg.classList.remove('hidden');
+        }
 
-            function hideMessages() {
-                errorMsg.classList.add("hidden");
-                successMsg.classList.add("hidden");
-            }
-        </script>
-    </body>
+        function hideMessages() {
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+        }
+    </script>
+</body>
 </html>
