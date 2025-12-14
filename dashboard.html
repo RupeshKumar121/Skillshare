@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SkillSwap | Dashboard</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap");
+            body {
+                font-family: "Inter", sans-serif;
+            }
+            .glass-panel {
+                background: rgba(30, 41, 59, 0.7);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            .skill-card-gradient {
+                background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                border: 1px solid #22c55e;
+            }
+        </style>
+    </head>
+    <body class="bg-slate-950 text-white h-screen flex overflow-hidden">
+        <aside
+            class="w-64 bg-slate-900 border-r border-white/5 flex-col hidden md:flex"
+        >
+            <div class="p-6 border-b border-white/5 flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-green-500 text-2xl"></i>
+                <span class="text-xl font-bold font-mono">SkillSwap</span>
+            </div>
+            <nav class="flex-1 p-4 space-y-2">
+                <a
+                    href="dashboard.html"
+                    class="flex items-center gap-3 px-4 py-3 bg-white/5 text-green-400 rounded-lg border-l-4 border-green-500"
+                    ><i class="fa-solid fa-grid-2"></i> Dashboard</a
+                >
+                <a
+                    href="marketplace.html"
+                    class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 rounded-lg"
+                    ><i class="fa-solid fa-store"></i> Marketplace</a
+                >
+                <a
+                    href="index.html"
+                    class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-white/5 rounded-lg mt-auto"
+                    ><i class="fa-solid fa-sign-out-alt"></i> Logout</a
+                >
+            </nav>
+        </aside>
+
+        <main class="flex-1 flex flex-col relative overflow-hidden">
+            <header
+                class="h-16 border-b border-white/5 bg-slate-900/50 backdrop-blur-md flex items-center justify-between px-6"
+            >
+                <h2 class="text-lg font-bold">Welcome back, Arjun 👋</h2>
+                <div
+                    class="text-green-400 text-xs font-bold border border-green-500/30 px-3 py-1 rounded-full"
+                >
+                    PGP-1 Verified
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div
+                        class="skill-card-gradient rounded-2xl p-6 relative overflow-hidden"
+                    >
+                        <p class="text-sm text-green-300 font-mono mb-1">
+                            SKILLSCORE BALANCE
+                        </p>
+                        <h3 class="text-4xl font-bold" id="coin-display">
+                            145
+                            <span class="text-sm text-slate-400 font-normal"
+                                >Coins</span
+                            >
+                        </h3>
+                        <div
+                            class="absolute right-0 top-0 w-32 h-32 bg-green-500/20 rounded-full blur-3xl -mr-10 -mt-10"
+                        ></div>
+                    </div>
+                    <div
+                        class="glass-panel rounded-2xl p-6 flex items-center gap-4"
+                    >
+                        <div
+                            class="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center"
+                        >
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">2 Sessions Given</h4>
+                            <p class="text-xs text-slate-400">
+                                You are in the top 15% of helpers!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="glass-panel rounded-2xl p-6 border border-green-500/30"
+                >
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-green-400"></i>
+                            My Skills
+                        </h3>
+                        <span
+                            class="text-xs text-yellow-400 bg-yellow-500/10 px-2 py-1 rounded border border-yellow-500/20"
+                            ><i class="fa-solid fa-star"></i> Earn 1.5x
+                            Coins</span
+                        >
+                    </div>
+
+                    <form
+                        onsubmit="event.preventDefault(); addSkill();"
+                        class="flex gap-3 mb-6"
+                    >
+                        <input
+                            type="text"
+                            id="skill-input"
+                            class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 text-white focus:border-green-500 outline-none"
+                            placeholder="Add a skill (e.g., Python, Finance)"
+                        />
+                        <button
+                            type="submit"
+                            class="bg-green-500 text-black font-bold px-6 py-3 rounded-xl hover:bg-green-400"
+                        >
+                            Add
+                        </button>
+                    </form>
+
+                    <div
+                        id="skills-container"
+                        class="flex flex-wrap gap-3"
+                    ></div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+            // Load User Data
+            let user = JSON.parse(localStorage.getItem("skillSwap_user")) || {
+                name: "Arjun",
+                coins: 145,
+                skills: [],
+            };
+
+            function render() {
+                document.getElementById("coin-display").innerHTML =
+                    `${user.coins} <span class="text-sm text-slate-400 font-normal">Coins</span>`;
+                const container = document.getElementById("skills-container");
+                container.innerHTML = "";
+                if (user.skills.length === 0)
+                    container.innerHTML =
+                        '<span class="text-slate-500 italic">No skills added yet.</span>';
+
+                user.skills.forEach((skill, index) => {
+                    const tag = document.createElement("div");
+                    tag.className =
+                        "bg-slate-800 border border-slate-600 rounded-full px-4 py-2 text-sm flex items-center gap-2";
+                    tag.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span>${skill} <i class="fa-solid fa-times text-slate-500 cursor-pointer hover:text-red-400" onclick="removeSkill(${index})"></i>`;
+                    container.appendChild(tag);
+                });
+            }
+
+            function addSkill() {
+                const input = document.getElementById("skill-input");
+                if (input.value.trim()) {
+                    user.skills.push(input.value.trim());
+                    save();
+                    render();
+                    input.value = "";
+                }
+            }
+
+            function removeSkill(index) {
+                user.skills.splice(index, 1);
+                save();
+                render();
+            }
+
+            function save() {
+                localStorage.setItem("skillSwap_user", JSON.stringify(user));
+            }
+
+            render();
+        </script>
+    </body>
+</html>

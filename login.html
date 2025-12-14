@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SkillSwap | Login</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap");
+            body {
+                font-family: "Inter", sans-serif;
+            }
+        </style>
+    </head>
+    <body
+        class="bg-slate-950 text-white h-screen flex items-center justify-center relative overflow-hidden"
+    >
+        <div
+            class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-500/10 rounded-full blur-[100px]"
+        ></div>
+
+        <div
+            class="w-full max-w-md p-8 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl relative z-10"
+        >
+            <div class="text-center mb-8">
+                <i class="fa-solid fa-bolt text-green-500 text-4xl mb-4"></i>
+                <h1 class="text-3xl font-bold font-mono">Welcome Back</h1>
+                <p class="text-slate-400">Login to access your dashboard</p>
+            </div>
+
+            <form onsubmit="event.preventDefault(); login();" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2"
+                        >Institute Email</label
+                    >
+                    <input
+                        type="email"
+                        value="student@iimshillong.ac.in"
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 focus:border-green-500 outline-none"
+                    />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2"
+                        >Password</label
+                    >
+                    <input
+                        type="password"
+                        value="password123"
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 focus:border-green-500 outline-none"
+                    />
+                </div>
+                <button
+                    type="submit"
+                    class="w-full bg-green-500 hover:bg-green-400 text-black font-bold py-3 rounded-lg transition-all"
+                >
+                    Login
+                </button>
+            </form>
+        </div>
+
+        <script>
+            function login() {
+                // Set initial user data if not present
+                if (!localStorage.getItem("skillSwap_user")) {
+                    const initialUser = {
+                        name: "Arjun",
+                        coins: 145,
+                        skills: [],
+                    };
+                    localStorage.setItem(
+                        "skillSwap_user",
+                        JSON.stringify(initialUser),
+                    );
+                }
+                // Redirect
+                window.location.href = "dashboard.html";
+            }
+        </script>
+    </body>
+</html>
